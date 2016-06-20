@@ -1,0 +1,77 @@
+#!/bin/bash
+
+__doko-echo(){
+  echo "\n>>> DOKO: $1\n"
+}
+
+#docker
+
+__build-images(){
+  if [ -f "docker/build.sh" ]; then
+    docker/build.sh
+  else
+    project=${PWD##*/}
+    docker build -t koombea/${project} .
+    if [ -f "Dockerfile.development" ]; then
+      docker build -t koombea/${project}_dev -f Dockerfile.development .
+    fi
+  fi
+}
+
+# docker-compose
+__dcp(){
+  service=$1
+  shift
+  docker-compose run --rm $service $@
+}
+
+__doko-setup(){
+  if [ -f "docker/setup.sh" ]; then
+    docker/setup.sh
+  else
+    project=${PWD##*/}
+    docker-compose up -d postgres
+    __build-images
+    docker-compose run --rm web bundle exec rake db:setup
+    docker-compose up
+  fi
+}
+
+__doko-troubleshoot(){
+  rails_server_pid_file="tmp/pids/server.pid"
+  if [ -f $rails_server_pid_file ]; then
+    __doko-echo "Removing Rails server PID file"
+    rm $rails_server_pid_file
+  fi
+  docker-compose stop web
+  docker-compose rm -f web
+  doko up
+}
+
+__doko-bundle-exec(){
+  docker-compose run --rm web bundle exec $@
+}
+
+__doko-up(){
+  docker-compose up
+}
+
+doko(){
+  case $1 in
+  setup)
+    __doko-setup
+    ;;
+  up)
+    __doko-up
+    ;;
+  troubleshoot)
+    __doko-troubleshoot
+    ;;
+  rake|rails)
+    __doko-bundle-exec $@
+    ;;
+  *)
+    __doko-echo "Unknown command."
+    ;;
+  esac
+}
