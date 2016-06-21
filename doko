@@ -70,6 +70,9 @@ doko(){
   rake|rails)
     __doko-bundle-exec $@
     ;;
+  npm)
+    __dcp web $@
+    ;;
   *)
     __doko-echo "Unknown command."
     ;;
