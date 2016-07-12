@@ -10,11 +10,7 @@ __build-images(){
   if [ -f "docker/build.sh" ]; then
     docker/build.sh
   else
-    project=${PWD##*/}
-    docker build -t koombea/${project} .
-    if [ -f "Dockerfile.development" ]; then
-      docker build -t koombea/${project}_dev -f Dockerfile.development .
-    fi
+    docker-compose build
   fi
 }
 
@@ -60,6 +56,9 @@ doko(){
   case $1 in
   setup)
     __doko-setup
+    ;;
+  build)
+    __build_images
     ;;
   up)
     __doko-up
