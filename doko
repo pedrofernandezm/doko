@@ -72,6 +72,9 @@ doko(){
   npm)
     __dcp web $@
     ;;
+  stop|ps|rm|up)
+    docker-compose $@
+    ;;
   *)
     __doko-echo "Unknown command."
     ;;
