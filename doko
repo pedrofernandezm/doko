@@ -58,7 +58,7 @@ doko(){
     __doko-setup
     ;;
   build)
-    __build_images
+    __build-images
     ;;
   up)
     __doko-up
