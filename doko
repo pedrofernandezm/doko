@@ -1,7 +1,9 @@
 #!/bin/bash
 
 __doko-echo(){
-  echo "\n>>> DOKO: $1\n"
+  echo
+  echo ">>> DOKO: $1"
+  echo
 }
 
 #docker
@@ -52,8 +54,31 @@ __doko-up(){
   docker-compose up
 }
 
-doko(){
+__doko-clean-containers(){
+  read -p "Do you want to remove all exited containers? (y/n) " answer
+  if [ "$answer" == "y" ]; then
+    __doko-echo "Removing containers exited weeks ago.";
+    docker ps -a | grep 'Exited' | grep 'weeks ago' | awk '{print $1}' | xargs docker rm
+  fi
+}
+
+__doko-clean-images(){
+  read -p "Do you want to remove dangling images? (y/n) " answer
+  if [ "$answer" == "y" ]; then
+    __doko-echo "Removing danglign images.";
+    docker rmi $(docker images -f "dangling=true" -q)
+  fi
+}
+
+__doko-exec(){
   case $1 in
+  version)
+    __doko-echo "version 0.1"
+    ;;
+  clean)
+    __doko-clean-containers
+    __doko-clean-images
+    ;;
   setup)
     __doko-setup
     ;;
@@ -80,3 +105,5 @@ doko(){
     ;;
   esac
 }
+
+__doko-exec $@
