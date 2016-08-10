@@ -3,7 +3,6 @@
 __doko-echo(){
   echo
   echo ">>> DOKO: $1"
-  echo
 }
 
 #docker
@@ -70,10 +69,20 @@ __doko-clean-images(){
   fi
 }
 
+__doko-upgrade(){
+  __doko-echo "Upgrading..."
+  curl -s -o /usr/local/bin/doko https://raw.githubusercontent.com/pedrofernandezm/doko/master/doko
+  chmod +x /usr/local/bin/doko
+  __doko-exec version
+}
+
 __doko-exec(){
   case $1 in
+  upgrade)
+    __doko-upgrade
+    ;;
   version)
-    __doko-echo "version 0.1"
+    __doko-echo "version 0.2"
     ;;
   clean)
     __doko-clean-containers
