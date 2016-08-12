@@ -68,7 +68,6 @@ __doko-upgrade(){
   __doko-echo "Upgrading..."
   curl -s -o /usr/local/bin/doko https://raw.githubusercontent.com/pedrofernandezm/doko/master/doko
   chmod +x /usr/local/bin/doko
-  __doko-exec version
 }
 
 __doko-exec(){
@@ -77,7 +76,7 @@ __doko-exec(){
     __doko-upgrade
     ;;
   version)
-    __doko-echo "version 0.3"
+    __doko-echo "version 0.3.1"
     ;;
   clean)
     __doko-clean-containers
