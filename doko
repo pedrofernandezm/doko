@@ -21,6 +21,14 @@ __dcp(){
   docker-compose run --rm $service $@
 }
 
+__doko-test(){
+  if [ -f "docker/test.sh" ]; then
+    docker/test.sh $@
+  else
+    docker-compose -f docker-compose.test.yml run --rm web bundle exec $@
+  fi
+}
+
 __doko-setup(){
   if [ -f "docker/setup.sh" ]; then
     docker/setup.sh
@@ -70,13 +78,14 @@ __doko-upgrade(){
   chmod +x /usr/local/bin/doko
 }
 
+
 __doko-exec(){
   case $1 in
   upgrade)
     __doko-upgrade
     ;;
   version)
-    __doko-echo "version 0.3.1"
+    __doko-echo "version 0.4.0"
     ;;
   clean)
     __doko-clean-containers
@@ -93,6 +102,10 @@ __doko-exec(){
     ;;
   rake|rails)
     __doko-bundle-exec $@
+    ;;
+  test)
+    shift
+    __doko-test $@
     ;;
   npm)
     __dcp web $@
