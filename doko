@@ -74,7 +74,7 @@ __doko-clean-images(){
 
 __doko-upgrade(){
   __doko-echo "Upgrading..."
-  curl -s -o /usr/local/bin/doko https://raw.githubusercontent.com/pedrofernandezm/doko/master/doko
+  curl -H 'Cache-Control: no-cache' -s -o /usr/local/bin/doko https://raw.githubusercontent.com/pedrofernandezm/doko/master/doko
   chmod +x /usr/local/bin/doko
 }
 
@@ -85,7 +85,7 @@ __doko-exec(){
     __doko-upgrade
     ;;
   version)
-    __doko-echo "version 0.5.0"
+    __doko-echo "version 0.5.1"
     ;;
   clean)
     __doko-clean-containers
