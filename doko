@@ -107,7 +107,7 @@ __doko-exec(){
     shift
     __doko-test $@
     ;;
-  npm)
+  npm|yarn)
     __dcp web $@
     ;;
   stop|ps|rm|up)
