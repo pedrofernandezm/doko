@@ -57,6 +57,8 @@ __doko-bundle-exec(){
 }
 
 __doko-clean-containers(){
+  __doko-echo "Removing containers that resulted in error during creation.";
+  docker ps -a | grep 'Created' | awk '{print $1}' | xargs docker rm
   read -p "Do you want to remove all exited containers? (y/n) " answer
   if [ "$answer" == "y" ]; then
     __doko-echo "Removing containers exited weeks ago.";
@@ -85,7 +87,7 @@ __doko-exec(){
     __doko-upgrade
     ;;
   version)
-    __doko-echo "version 0.5.1"
+    __doko-echo "version 0.6.0"
     ;;
   clean)
     __doko-clean-containers
